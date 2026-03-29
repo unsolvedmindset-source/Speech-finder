@@ -9,9 +9,9 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0a0a0a; --surface: #111; --card: #161616; --border: #252525;
-    --accent: #e8ff47; --accent2: #ff6b35; --text: #f0f0f0; --muted: #555;
-    --green: #4ade80; --purple: #a78bfa; --red: #ff4444;
+    --bg: #f8f8f6; --surface: #ffffff; --card: #ffffff; --border: #e0e0e0;
+    --accent: #1a1a1a; --accent2: #ff6b35; --text: #111111; --muted: #888;
+    --green: #16a34a; --purple: #7c3aed; --red: #dc2626;
   }
   body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
 
@@ -27,10 +27,10 @@ h1 em { font-style: normal; color: var(–accent); display: block; }
 
 .controls { padding: 0 48px 28px; display: flex; flex-direction: column; gap: 14px; animation: fadeDown 0.5s 0.14s ease both; }
 .search-row { display: flex; gap: 10px; }
-.search-input { flex: 1; background: var(–surface); border: 1px solid var(–border); border-radius: 4px; padding: 14px 18px; color: var(–text); font-family: ‘DM Sans’, sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+.search-input { flex: 1; background: #ffffff; border: 1px solid var(–border); border-radius: 4px; padding: 14px 18px; color: var(–text); font-family: ‘DM Sans’, sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
 .search-input:focus { border-color: var(–accent); }
 .search-input::placeholder { color: #333; }
-.btn-primary { background: var(–accent); color: #000; border: none; border-radius: 4px; padding: 14px 26px; font-family: ‘Bebas Neue’, sans-serif; font-size: 1.05rem; letter-spacing: 0.08em; cursor: pointer; transition: opacity 0.15s, transform 0.15s; white-space: nowrap; }
+.btn-primary { background: var(–accent); color: #fff; border: none; border-radius: 4px; padding: 14px 26px; font-family: ‘Bebas Neue’, sans-serif; font-size: 1.05rem; letter-spacing: 0.08em; cursor: pointer; transition: opacity 0.15s, transform 0.15s; white-space: nowrap; }
 .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
 
 .filter-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
@@ -46,18 +46,18 @@ h1 em { font-style: normal; color: var(–accent); display: block; }
 .cat-block { margin-bottom: 18px; }
 .cat-label { font-family: ‘DM Mono’, monospace; font-size: 0.62rem; color: #2e2e2e; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
 .speaker-row { display: flex; flex-wrap: wrap; gap: 7px; }
-.speaker-btn { background: var(–surface); border: 1px solid var(–border); color: #444; padding: 7px 14px; border-radius: 4px; font-size: 0.8rem; font-family: ‘DM Sans’, sans-serif; cursor: pointer; transition: all 0.15s; }
+.speaker-btn { background: #ffffff; border: 1px solid var(–border); color: #444; padding: 7px 14px; border-radius: 4px; font-size: 0.8rem; font-family: ‘DM Sans’, sans-serif; cursor: pointer; transition: all 0.15s; }
 .speaker-btn:hover { border-color: #3a3a3a; color: #aaa; }
-.speaker-btn.active { background: #141407; border-color: var(–accent); color: var(–accent); }
+.speaker-btn.active { background: #f0f0f0; border-color: #111; color: #111; }
 
 /* RESULTS */
 .results-bar { padding: 0 48px 16px; display: flex; justify-content: space-between; align-items: center; }
 .results-count { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); }
 .btn-dl { background: transparent; border: 1px solid var(–accent); color: var(–accent); border-radius: 4px; padding: 8px 16px; font-family: ‘DM Mono’, monospace; font-size: 0.7rem; cursor: pointer; transition: all 0.15s; }
-.btn-dl:hover { background: var(–accent); color: #000; }
+.btn-dl:hover { background: var(–accent); color: #fff; }
 
 .cards { padding: 0 48px 80px; display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 13px; }
-.card { background: var(–card); border: 1px solid var(–border); border-radius: 6px; padding: 20px 22px; display: flex; flex-direction: column; gap: 11px; transition: border-color 0.18s, transform 0.18s; animation: fadeUp 0.3s ease both; }
+.card { background: #ffffff; border: 1px solid var(–border); border-radius: 6px; padding: 20px 22px; display: flex; flex-direction: column; gap: 11px; transition: border-color 0.18s, transform 0.18s; animation: fadeUp 0.3s ease both; }
 .card:hover { border-color: #2a2a2a; transform: translateY(-2px); }
 .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
 .tag { font-family: ‘DM Mono’, monospace; font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 100px; }
