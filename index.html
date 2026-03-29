@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpeechFinder — Pure Motivation, No Noise</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #111; --card: #161616; --border: #252525;
+    --accent: #e8ff47; --accent2: #ff6b35; --text: #f0f0f0; --muted: #555;
+    --green: #4ade80; --purple: #a78bfa; --red: #ff4444;
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+
+header { padding: 44px 48px 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; animation: fadeDown 0.5s ease both; }
+.logo { font-family: ‘Bebas Neue’, sans-serif; font-size: 2.2rem; letter-spacing: 0.08em; color: var(–accent); }
+.logo span { color: var(–text); }
+.badge { background: var(–border); color: var(–muted); font-family: ‘DM Mono’, monospace; font-size: 0.68rem; padding: 6px 14px; border-radius: 100px; letter-spacing: 0.05em; }
+
+.hero { padding: 52px 48px 36px; animation: fadeDown 0.5s 0.08s ease both; }
+h1 { font-family: ‘Bebas Neue’, sans-serif; font-size: clamp(3.2rem, 7vw, 6.5rem); line-height: 0.9; letter-spacing: 0.02em; margin-bottom: 16px; }
+h1 em { font-style: normal; color: var(–accent); display: block; }
+.subtitle { color: var(–muted); font-size: 0.92rem; font-weight: 300; max-width: 460px; line-height: 1.7; }
+
+.controls { padding: 0 48px 28px; display: flex; flex-direction: column; gap: 14px; animation: fadeDown 0.5s 0.14s ease both; }
+.search-row { display: flex; gap: 10px; }
+.search-input { flex: 1; background: var(–surface); border: 1px solid var(–border); border-radius: 4px; padding: 14px 18px; color: var(–text); font-family: ‘DM Sans’, sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+.search-input:focus { border-color: var(–accent); }
+.search-input::placeholder { color: #333; }
+.btn-primary { background: var(–accent); color: #000; border: none; border-radius: 4px; padding: 14px 26px; font-family: ‘Bebas Neue’, sans-serif; font-size: 1.05rem; letter-spacing: 0.08em; cursor: pointer; transition: opacity 0.15s, transform 0.15s; white-space: nowrap; }
+.btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+
+.filter-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.filter-label { font-family: ‘DM Mono’, monospace; font-size: 0.66rem; color: var(–muted); text-transform: uppercase; letter-spacing: 0.1em; }
+.chip { background: transparent; border: 1px solid var(–border); color: var(–muted); padding: 6px 13px; border-radius: 100px; font-size: 0.77rem; font-family: ‘DM Sans’, sans-serif; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.chip.active { background: var(–accent); border-color: var(–accent); color: #000; font-weight: 500; }
+.chip.clip-chip.active { background: var(–purple); border-color: var(–purple); color: #fff; }
+.chip:hover:not(.active) { border-color: #444; color: #999; }
+
+/* SPEAKER SECTION */
+.section { padding: 0 48px 28px; animation: fadeDown 0.5s 0.2s ease both; }
+.section-title { font-family: ‘DM Mono’, monospace; font-size: 0.68rem; color: #333; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 14px; }
+.cat-block { margin-bottom: 18px; }
+.cat-label { font-family: ‘DM Mono’, monospace; font-size: 0.62rem; color: #2e2e2e; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+.speaker-row { display: flex; flex-wrap: wrap; gap: 7px; }
+.speaker-btn { background: var(–surface); border: 1px solid var(–border); color: #444; padding: 7px 14px; border-radius: 4px; font-size: 0.8rem; font-family: ‘DM Sans’, sans-serif; cursor: pointer; transition: all 0.15s; }
+.speaker-btn:hover { border-color: #3a3a3a; color: #aaa; }
+.speaker-btn.active { background: #141407; border-color: var(–accent); color: var(–accent); }
+
+/* RESULTS */
+.results-bar { padding: 0 48px 16px; display: flex; justify-content: space-between; align-items: center; }
+.results-count { font-family: ‘DM Mono’, monospace; font-size: 0.72rem; color: var(–muted); }
+.btn-dl { background: transparent; border: 1px solid var(–accent); color: var(–accent); border-radius: 4px; padding: 8px 16px; font-family: ‘DM Mono’, monospace; font-size: 0.7rem; cursor: pointer; transition: all 0.15s; }
+.btn-dl:hover { background: var(–accent); color: #000; }
+
+.cards { padding: 0 48px 80px; display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 13px; }
+.card { background: var(–card); border: 1px solid var(–border); border-radius: 6px; padding: 20px 22px; display: flex; flex-direction: column; gap: 11px; transition: border-color 0.18s, transform 0.18s; animation: fadeUp 0.3s ease both; }
+.card:hover { border-color: #2a2a2a; transform: translateY(-2px); }
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-family: ‘DM Mono’, monospace; font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 100px; }
+.tag-cat-athlete { background: #1a0a00; color: #ff8c42; border: 1px solid #2a1800; }
+.tag-cat-military { background: #0a1200; color: #7ec850; border: 1px solid #182400; }
+.tag-cat-business { background: #00101a; color: #42b4ff; border: 1px solid #00202e; }
+.tag-cat-mindset { background: #10001a; color: var(–purple); border: 1px solid #200030; }
+.tag-clip { background: #0f0a1a; color: var(–purple); border: 1px solid #2a1a4a; }
+.tag-nomusic { background: #0a1a0f; color: var(–green); border: 1px solid #1a3326; }
+.card-speaker { font-family: ‘Bebas Neue’, sans-serif; font-size: 1.1rem; letter-spacing: 0.05em; color: var(–text); }
+.card-title { font-size: 0.88rem; color: #888; line-height: 1.5; }
+.card-bottom { display: flex; gap: 8px; padding-top: 10px; border-top: 1px solid var(–border); flex-wrap: wrap; }
+.yt-btn { display: inline-block; background: #1a0a0a; border: 1px solid #330000; color: var(–red); font-family: ‘DM Mono’, monospace; font-size: 0.68rem; padding: 6px 12px; border-radius: 3px; text-decoration: none; transition: all 0.15s; white-space: nowrap; }
+.yt-btn:hover { background: var(–red); color: #fff; border-color: var(–red); }
+.yt-btn.full { background: #0a0f1a; border-color: #001433; color: #4488ff; }
+.yt-btn.full:hover { background: #4488ff; color: #fff; border-color: #4488ff; }
+
+.empty { padding: 60px 48px; text-align: center; color: #2a2a2a; display: none; font-family: ‘DM Mono’, monospace; font-size: 0.8rem; }
+
+@keyframes fadeDown { from { opacity: 0; transform: translateY(-14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 600px) {
+header, .hero, .controls, .section, .results-bar, .cards, .empty { padding-left: 20px; padding-right: 20px; }
+.search-row { flex-direction: column; }
+h1 { font-size: 3rem; }
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <div class="logo">Speech<span>Finder</span></div>
+  <div class="badge">NO BACKGROUND MUSIC</div>
+</header>
+
+<div class="hero">
+  <h1>Pure <em>Motivation.</em> Zero Noise.</h1>
+  <p class="subtitle">50+ speakers. Power clips and full speeches. Every result opens a live YouTube search — always working, always fresh.</p>
+</div>
+
+<div class="controls">
+  <div class="search-row">
+    <input class="search-input" id="topicInput" type="text" placeholder="Add a topic, e.g. discipline, never quit, success..." />
+    <button class="btn-primary" onclick="renderCards()">FIND</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">Length:</span>
+    <button class="chip clip-chip active" data-len="clip" onclick="toggleChip(this)">⚡ Clips (&lt;2 min)</button>
+    <button class="chip active" data-len="short" onclick="toggleChip(this)">Short (&lt;15 min)</button>
+    <button class="chip active" data-len="medium" onclick="toggleChip(this)">Medium (15–45 min)</button>
+    <button class="chip active" data-len="long" onclick="toggleChip(this)">Long (&gt;45 min)</button>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">Category:</span>
+    <button class="chip active" data-cat="all" onclick="setCat(this)">All</button>
+    <button class="chip" data-cat="athlete" onclick="setCat(this)">🥊 Athletes</button>
+    <button class="chip" data-cat="military" onclick="setCat(this)">🎖 Military</button>
+    <button class="chip" data-cat="business" onclick="setCat(this)">💼 Business</button>
+    <button class="chip" data-cat="mindset" onclick="setCat(this)">🧠 Mindset</button>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Filter by Speaker</div>
+  <div id="speakerSection"></div>
+</div>
+
+<div class="results-bar">
+  <div class="results-count" id="resultsCount"></div>
+  <button class="btn-dl" onclick="downloadList()">↓ DOWNLOAD LIST</button>
+</div>
+<div class="cards" id="cardsGrid"></div>
+<div class="empty" id="emptyBox">No results. Try enabling more filters or selecting a different category.</div>
+
+<script>
+const SPEAKERS = [
+  // Athletes & Fighters
+  { name: "Conor McGregor",       cat: "athlete", topics: ["mindset","belief","champion","visualization"] },
+  { name: "Kobe Bryant",          cat: "athlete", topics: ["mamba mentality","hard work","greatness"] },
+  { name: "Muhammad Ali",         cat: "athlete", topics: ["confidence","impossible","champion","I am the greatest"] },
+  { name: "Mike Tyson",           cat: "athlete", topics: ["discipline","fear","hunger","survival"] },
+  { name: "Arnold Schwarzenegger",cat: "athlete", topics: ["success","bodybuilding","mindset","goal"] },
+  { name: "Dwayne Johnson",       cat: "athlete", topics: ["work ethic","grind","success","outwork"] },
+  { name: "LeBron James",         cat: "athlete", topics: ["dedication","legacy","sacrifice","team"] },
+  { name: "Michael Jordan",       cat: "athlete", topics: ["winning","failure","competitive","fire"] },
+  { name: "Cristiano Ronaldo",    cat: "athlete", topics: ["hard work","dedication","best","training"] },
+  { name: "Serena Williams",      cat: "athlete", topics: ["strength","overcome","champion","believe"] },
+  { name: "Floyd Mayweather",     cat: "athlete", topics: ["winning","dedication","hard work","champion"] },
+  { name: "Bruce Lee",            cat: "athlete", topics: ["philosophy","mind","water","adapt"] },
+  { name: "Usain Bolt",           cat: "athlete", topics: ["speed","belief","champion","relax"] },
+  { name: "Tiger Woods",          cat: "athlete", topics: ["focus","mental strength","training","greatness"] },
+
+  // Military & Discipline
+  { name: "David Goggins",        cat: "military", topics: ["40 percent rule","mental toughness","callus the mind","suffering"] },
+  { name: "Jocko Willink",        cat: "military", topics: ["discipline equals freedom","extreme ownership","leadership"] },
+  { name: "Eric Thomas",          cat: "military", topics: ["hunger","when you want to succeed","sacrifice","grind"] },
+  { name: "Andy Frisella",        cat: "military", topics: ["MFCEO","real talk","discipline","success"] },
+  { name: "Cameron Hanes",        cat: "military", topics: ["bowhunting","hard work","keep hammering","grind"] },
+  { name: "Mark Divine",          cat: "military", topics: ["navy seal","unbeatable mind","focus","warrior"] },
+  { name: "Tim Kennedy",          cat: "military", topics: ["warrior","fight","purpose","special forces"] },
+  { name: "Leif Babin",           cat: "military", topics: ["extreme ownership","leadership","navy seal","team"] },
+
+  // Entrepreneurs & Business
+  { name: "Elon Musk",            cat: "business", topics: ["first principles","failure","Mars","innovation"] },
+  { name: "Gary Vaynerchuk",      cat: "business", topics: ["hustle","patience","self awareness","gratitude"] },
+  { name: "Andrew Tate",          cat: "business", topics: ["speed","hard work","mindset","money"] },
+  { name: "Grant Cardone",        cat: "business", topics: ["10x rule","sales","obsession","money"] },
+  { name: "Alex Hormozi",         cat: "business", topics: ["business","offer","volume","work"] },
+  { name: "Steve Jobs",           cat: "business", topics: ["stay hungry stay foolish","think different","passion","legacy"] },
+  { name: "Jeff Bezos",           cat: "business", topics: ["long term","customer","regret minimization","innovation"] },
+  { name: "Mark Cuban",           cat: "business", topics: ["work hard","sales","no excuses","entrepreneur"] },
+  { name: "Warren Buffett",       cat: "business", topics: ["investing","patience","habits","reading"] },
+  { name: "Ray Dalio",            cat: "business", topics: ["principles","pain failure evolution","radical transparency"] },
+  { name: "Patrick Bet-David",    cat: "business", topics: ["entrepreneur","choose your enemies","future self"] },
+  { name: "Dan Pena",             cat: "business", topics: ["trillion dollar man","no excuses","big dreams"] },
+  { name: "Robert Kiyosaki",      cat: "business", topics: ["rich dad","financial freedom","assets","mindset"] },
+  { name: "Sam Altman",           cat: "business", topics: ["AI","startup","ambition","focus"] },
+
+  // Self-Help & Mindset
+  { name: "Joe Rogan",            cat: "mindset", topics: ["hero of your own movie","be the person","discipline","passion"] },
+  { name: "Tony Robbins",         cat: "mindset", topics: ["state","why we do what we do","breakthrough","energy"] },
+  { name: "Simon Sinek",          cat: "mindset", topics: ["start with why","leaders eat last","infinite game"] },
+  { name: "Mel Robbins",          cat: "mindset", topics: ["5 second rule","stop screwing yourself","courage"] },
+  { name: "Les Brown",            cat: "mindset", topics: ["it's possible","greatness","hunger","you gotta be hungry"] },
+  { name: "Jim Rohn",             cat: "mindset", topics: ["discipline","personal development","habits","seasons of life"] },
+  { name: "Jordan Peterson",      cat: "mindset", topics: ["clean your room","responsibility","meaning","12 rules"] },
+  { name: "Brené Brown",          cat: "mindset", topics: ["vulnerability","courage","shame","wholehearted"] },
+  { name: "Angela Duckworth",     cat: "mindset", topics: ["grit","passion perseverance","talent","effort"] },
+  { name: "Matthew McConaughey", cat: "mindset", topics: ["greenlights","hero","process","grateful"] },
+  { name: "Will Smith",           cat: "mindset", topics: ["treadmill","talent","skill","self discipline"] },
+  { name: "Denzel Washington",    cat: "mindset", topics: ["fall forward","dreams","without commitment","faith"] },
+  { name: "Oprah Winfrey",        cat: "mindset", topics: ["purpose","gratitude","failure","turning point"] },
+  { name: "Robin Sharma",         cat: "mindset", topics: ["5am club","monk who sold ferrari","mastery","routine"] },
+  { name: "Les Brown",            cat: "mindset", topics: ["it's possible","hunger","greatness"] },
+  { name: "Wayne Dyer",           cat: "mindset", topics: ["intention","change thoughts","spiritual","manifest"] },
+  { name: "Bob Proctor",          cat: "mindset", topics: ["law of attraction","paradigm","abundance","mindset"] },
+  { name: "Zig Ziglar",           cat: "mindset", topics: ["attitude","goals","success","motivation"] },
+  { name: "Earl Nightingale",     cat: "mindset", topics: ["strangest secret","become what we think","success"] },
+];
+
+// Deduplicate
+const seen = new Set();
+const ALL_SPEAKERS = SPEAKERS.filter(s => { if (seen.has(s.name)) return false; seen.add(s.name); return true; });
+
+const CAT_INFO = {
+  athlete:  { label: "🥊 Athletes & Fighters",    tagClass: "tag-cat-athlete" },
+  military: { label: "🎖 Military & Discipline",  tagClass: "tag-cat-military" },
+  business: { label: "💼 Entrepreneurs",          tagClass: "tag-cat-business" },
+  mindset:  { label: "🧠 Self-Help & Mindset",    tagClass: "tag-cat-mindset" },
+};
+
+const LEN_INFO = {
+  clip:   { label: "Under 2 min",  ytDur: "short",  extraQ: "clip short" },
+  short:  { label: "Under 15 min", ytDur: "short",  extraQ: "speech motivation" },
+  medium: { label: "15–45 min",    ytDur: "medium", extraQ: "full interview" },
+  long:   { label: "45+ min",      ytDur: "long",   extraQ: "full interview podcast" },
+};
+
+let selectedSpeaker = null;
+let activeCat = 'all';
+let currentCards = [];
+
+// ── BUILD SPEAKER UI ──
+function buildSpeakers() {
+  const sec = document.getElementById('speakerSection');
+  sec.innerHTML = '';
+  const cats = ['athlete','military','business','mindset'];
+  cats.forEach(cat => {
+    const speakers = ALL_SPEAKERS.filter(s => s.cat === cat);
+    if (!speakers.length) return;
+    const block = document.createElement('div');
+    block.className = 'cat-block';
+    block.innerHTML = `<div class="cat-label">${CAT_INFO[cat].label}</div><div class="speaker-row" id="row-${cat}"></div>`;
+    sec.appendChild(block);
+    const row = block.querySelector('.speaker-row');
+    speakers.forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'speaker-btn';
+      btn.textContent = s.name;
+      btn.dataset.name = s.name;
+      btn.dataset.cat = s.cat;
+      btn.onclick = () => toggleSpeaker(btn, s);
+      row.appendChild(btn);
+    });
+  });
+}
+
+function toggleSpeaker(btn, s) {
+  if (selectedSpeaker === s.name) {
+    selectedSpeaker = null;
+    btn.classList.remove('active');
+  } else {
+    document.querySelectorAll('.speaker-btn.active').forEach(b => b.classList.remove('active'));
+    selectedSpeaker = s.name;
+    btn.classList.add('active');
+  }
+  renderCards();
+}
+
+function toggleChip(el) { el.classList.toggle('active'); renderCards(); }
+
+function setCat(el) {
+  document.querySelectorAll('.chip[data-cat]').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  activeCat = el.dataset.cat;
+  selectedSpeaker = null;
+  document.querySelectorAll('.speaker-btn.active').forEach(b => b.classList.remove('active'));
+  renderCards();
+}
+
+// ── BUILD YOUTUBE SEARCH URL ──
+function ytSearchUrl(speaker, topic, lenKey) {
+  const li = LEN_INFO[lenKey];
+  const noMusic = 'no background music spoken word';
+  const q = `${speaker} ${topic} ${noMusic} ${li.extraQ}`;
+  return `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}&sp=${ytSortParam(li.ytDur)}`;
+}
+
+function ytSortParam(dur) {
+  // CAASAhAB = this week, EgQQARgB = under 4 min, EgQQARgC = 4-20 min, EgQQARgD = 20+ min
+  if (dur === 'short') return 'EgQQARgB';
+  if (dur === 'medium') return 'EgQQARgC';
+  if (dur === 'long') return 'EgQQARgD';
+  return '';
+}
+
+// ── RENDER CARDS ──
+function renderCards() {
+  const topic = document.getElementById('topicInput').value.trim() || 'motivation mindset';
+  const activeLens = [...document.querySelectorAll('.chip[data-len].active')].map(c => c.dataset.len);
+
+  // Filter speakers
+  let speakers = ALL_SPEAKERS;
+  if (activeCat !== 'all') speakers = speakers.filter(s => s.cat === activeCat);
+  if (selectedSpeaker) speakers = speakers.filter(s => s.name === selectedSpeaker);
+
+  // Build one card per speaker per active length
+  currentCards = [];
+  speakers.forEach(s => {
+    activeLens.forEach(len => {
+      const t = s.topics[0]; // primary topic
+      currentCards.push({ speaker: s, len, topic: `${topic} ${t}`, searchTopic: topic });
+    });
+  });
+
+  const grid = document.getElementById('cardsGrid');
+  const empty = document.getElementById('emptyBox');
+  document.getElementById('resultsCount').textContent = `${currentCards.length} RESULT${currentCards.length !== 1 ? 'S' : ''} FOUND`;
+  grid.innerHTML = '';
+
+  if (!currentCards.length) { empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  currentCards.forEach((c, i) => {
+    const s = c.speaker;
+    const len = c.len;
+    const li = LEN_INFO[len];
+    const isClip = len === 'clip';
+    const cat = CAT_INFO[s.cat];
+    const primaryUrl = ytSearchUrl(s.name, c.searchTopic, len);
+    const topicTags = s.topics.slice(0, 3).map(t =>
+      `<a class="yt-btn" href="${ytSearchUrl(s.name, t, len)}" target="_blank" rel="noopener">${t}</a>`
+    ).join('');
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${(i % 20) * 0.03}s`;
+    card.innerHTML = `
+      <div class="card-tags">
+        <span class="tag ${cat.tagClass}">${s.cat}</span>
+        ${isClip ? '<span class="tag tag-clip">⚡ CLIP</span>' : ''}
+        <span class="tag tag-nomusic">✓ NO MUSIC</span>
+      </div>
+      <div class="card-speaker">${s.name}</div>
+      <div class="card-title">${li.label} · ${c.searchTopic || s.topics[0]}</div>
+      <div class="card-bottom">
+        <a class="yt-btn" href="${primaryUrl}" target="_blank" rel="noopener">▶ Search YouTube</a>
+        ${topicTags}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function downloadList() {
+  if (!currentCards.length) return;
+  const topic = document.getElementById('topicInput').value.trim() || 'motivation';
+  const lines = [
+    'SPEECHFINDER — MOTIVATIONAL SPEECHES & CLIPS',
+    '='.repeat(60),
+    `Downloaded: ${new Date().toLocaleString()}`,
+    `Topic: ${topic}`,
+    `Total: ${currentCards.length} search links`,
+    '',
+    ...currentCards.map((c, i) => {
+      const li = LEN_INFO[c.len];
+      return [
+        `${i + 1}. ${c.speaker.name} — ${li.label}`,
+        `   Category: ${c.speaker.cat}`,
+        `   Search  : ${ytSearchUrl(c.speaker.name, topic, c.len)}`,
+        ''
+      ].join('\n');
+    })
+  ].join('\n');
+  const blob = new Blob([lines], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'motivational-speeches.txt';
+  a.click();
+}
+
+document.getElementById('topicInput').addEventListener('keydown', e => { if (e.key === 'Enter') renderCards(); });
+
+buildSpeakers();
+renderCards();
+</script>
+
+</body>
+</html>
