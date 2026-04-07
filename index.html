@@ -180,6 +180,8 @@ h1 { font-size: 3rem; }
       <button class="chip" data-cat="military" onclick="setCat(this)">🎖 Military</button>
       <button class="chip" data-cat="business" onclick="setCat(this)">💼 Business</button>
       <button class="chip" data-cat="mindset" onclick="setCat(this)">🧠 Mindset</button>
+      <button class="chip" data-cat="podcast" onclick="setCat(this)">🎙 Podcasts</button>
+      <button class="chip" data-cat="boxing" onclick="setCat(this)">🥊 Boxing</button>
     </div>
   </div>
 
@@ -263,6 +265,63 @@ const SPEAKERS = [
   { name: "Bob Proctor",           cat: "mindset",  topics: ["law of attraction","paradigm","abundance","mindset"] },
   { name: "Zig Ziglar",            cat: "mindset",  topics: ["attitude","goals","success","motivation"] },
   { name: "Earl Nightingale",      cat: "mindset",  topics: ["strangest secret","become what we think","success"] },
+
+  // Podcasts
+  { name: "The Joe Rogan Experience", cat: "podcast", topics: ["motivation","mindset","discipline","success"] },
+  { name: "Jocko Podcast",            cat: "podcast", topics: ["discipline","leadership","extreme ownership","warrior"] },
+  { name: "The Tim Ferriss Show",     cat: "podcast", topics: ["morning routine","habits","peak performance","tools of titans"] },
+  { name: "Impact Theory",            cat: "podcast", topics: ["mindset","success","purpose","greatness"] },
+  { name: "The School of Greatness",  cat: "podcast", topics: ["greatness","success","habits","mindset"] },
+  { name: "Ed Mylett Show",           cat: "podcast", topics: ["max out","success","mindset","champion"] },
+  { name: "The GaryVee Audio Experience", cat: "podcast", topics: ["hustle","entrepreneurship","gratitude","self awareness"] },
+  { name: "Diary of a CEO",           cat: "podcast", topics: ["success","mindset","entrepreneurship","habits"] },
+  { name: "On Purpose with Jay Shetty", cat: "podcast", topics: ["purpose","mindset","happiness","monk"] },
+  { name: "The Mindset Mentor",       cat: "podcast", topics: ["mindset","habits","growth","discipline"] },
+  { name: "Earn Your Happy",          cat: "podcast", topics: ["happiness","success","purpose","motivation"] },
+  { name: "The Tony Robbins Podcast", cat: "podcast", topics: ["peak state","breakthrough","success","energy"] },
+  { name: "MFCEO Project",            cat: "podcast", topics: ["discipline","no excuses","success","real talk"] },
+  { name: "Finding Mastery",          cat: "podcast", topics: ["mental performance","mastery","athletes","mindset"] },
+  { name: "The Rich Roll Podcast",    cat: "podcast", topics: ["endurance","plant based","transformation","mindset"] },
+  { name: "Huberman Lab",             cat: "podcast", topics: ["neuroscience","performance","focus","sleep habits"] },
+  { name: "Modern Wisdom",            cat: "podcast", topics: ["wisdom","performance","philosophy","mindset"] },
+  { name: "Unlock Your Potential",    cat: "podcast", topics: ["potential","mindset","success","habits"] },
+  { name: "The Brendon Show",         cat: "podcast", topics: ["high performance","clarity","energy","courage"] },
+  { name: "Motivational Madness",     cat: "podcast", topics: ["motivation","speeches","grind","success"] },
+  { name: "The Model Health Show",    cat: "podcast", topics: ["health","performance","habits","mindset"] },
+  { name: "Feel Better Live More",    cat: "podcast", topics: ["health","mindset","habits","wellbeing"] },
+  { name: "The Knowledge Project",    cat: "podcast", topics: ["mental models","decision making","wisdom","clarity"] },
+  { name: "Good Life Project",        cat: "podcast", topics: ["purpose","meaning","happiness","fulfillment"] },
+  { name: "The Happiness Lab",        cat: "podcast", topics: ["happiness","science","gratitude","mindset"] },
+  { name: "Tate Speech Podcast", cat: "podcast", topics: ["mindset","success","money","discipline"] },
+  { name: "Andrew Tate Motivation", cat: "podcast", topics: ["hard work","speed","mindset","money"] },
+  { name: "Bisping: Believe You Me", cat: "podcast", topics: ["UFC","fighting","mindset","champion"] },
+  { name: "DC and RC Show", cat: "podcast", topics: ["UFC","Daniel Cormier","fighting","champion"] },
+  { name: "Brendan Schaub Below the Belt", cat: "podcast", topics: ["UFC","fighting","mindset","success"] },
+  { name: "Chael Sonnen Podcast", cat: "podcast", topics: ["UFC","MMA","mindset","champion"] },
+  { name: "UFC Unfiltered", cat: "podcast", topics: ["UFC","fighters","mindset","training"] },
+  { name: "Conor McGregor Motivation", cat: "podcast", topics: ["McGregor","mindset","champion","believe"] },
+  { name: "Jon Jones Motivation", cat: "podcast", topics: ["Jon Jones","champion","discipline","greatness"] },
+  { name: "Israel Adesanya Motivation", cat: "podcast", topics: ["Last Stylebender","discipline","greatness","champion"] },
+  { name: "Khabib Nurmagomedov Motivation", cat: "podcast", topics: ["Khabib","discipline","champion","sacrifice"] },
+  { name: "Francis Ngannou Motivation", cat: "podcast", topics: ["Ngannou","poverty","predator","champion"] },
+  { name: "Georges St-Pierre Motivation", cat: "podcast", topics: ["GSP","champion","discipline","preparation"] },
+  { name: "Nate Diaz Motivation", cat: "podcast", topics: ["Diaz","real","heart","never quit"] },
+  { name: "Sean OHaire Motivation", cat: "podcast", topics: ["UFC","mindset","warrior","fight"] },
+  { name: "Muhammad Ali Motivation", cat: "boxing", topics: ["I am the greatest","impossible","champion","confidence"] },
+  { name: "Mike Tyson Motivation", cat: "boxing", topics: ["discipline","fear","hunger","survival"] },
+  { name: "Mike Tyson Hotboxin Podcast", cat: "boxing", topics: ["life lessons","mindset","redemption","greatness"] },
+  { name: "Floyd Mayweather Motivation", cat: "boxing", topics: ["hard work","dedication","TBE","champion"] },
+  { name: "Canelo Alvarez Motivation", cat: "boxing", topics: ["sacrifice","discipline","champion","hard work"] },
+  { name: "Anthony Joshua Motivation", cat: "boxing", topics: ["discipline","champion","resilience","hard work"] },
+  { name: "Deontay Wilder Motivation", cat: "boxing", topics: ["heart","champion","power","sacrifice"] },
+  { name: "Tyson Fury Motivation", cat: "boxing", topics: ["mental health","comeback","never give up","gypsy king"] },
+  { name: "Lennox Lewis Motivation", cat: "boxing", topics: ["champion","dedication","mindset","legacy"] },
+  { name: "Sugar Ray Leonard Motivation", cat: "boxing", topics: ["champion","heart","dedication","comeback"] },
+  { name: "George Foreman Motivation", cat: "boxing", topics: ["comeback","faith","champion","never quit"] },
+  { name: "Oscar De La Hoya Motivation", cat: "boxing", topics: ["champion","sacrifice","dedication","gold"] },
+  { name: "Roy Jones Jr Motivation", cat: "boxing", topics: ["champion","skill","discipline","greatness"] },
+  { name: "Joe Frazier Motivation", cat: "boxing", topics: ["heart","champion","sacrifice","smokin joe"] },
+  { name: "Evander Holyfield Motivation", cat: "boxing", topics: ["heart","champion","faith","never quit"] },
 ];
 
 const CAT_INFO = {
@@ -270,6 +329,8 @@ const CAT_INFO = {
   military: { label: "🎖 Military & Discipline" },
   business: { label: "💼 Entrepreneurs & Business" },
   mindset:  { label: "🧠 Self-Help & Mindset" },
+  podcast:  { label: "🎙 Motivational Podcasts" },
+  boxing:   { label: "🥊 Boxing Legends" },
 };
 
 const LEN_INFO = {
@@ -336,7 +397,7 @@ function showApp() {
 function buildSpeakers() {
   const sec = document.getElementById('speakerSection');
   sec.innerHTML = '';
-  ['athlete','military','business','mindset'].forEach(cat => {
+  ['athlete','military','business','mindset','podcast','boxing'].forEach(cat => {
     const speakers = SPEAKERS.filter(s => s.cat === cat);
     const block = document.createElement('div');
     block.className = 'cat-block';
@@ -392,7 +453,7 @@ async function doSearch() {
   document.getElementById('emptyBox').style.display = 'none';
   currentResults = [];
 
-  const noMusic = 'no background music';
+  const noMusic = 'no background music spoken word interview';
   const allItems = [];
 
   try {
